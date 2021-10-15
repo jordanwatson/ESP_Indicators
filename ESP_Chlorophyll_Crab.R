@@ -17,6 +17,7 @@ lapply(unique(temp$crab),function(x) temp %>%
          mutate(INDICATOR_NAME=case_when(crab=="BristolBay"~"SPR_CHLORO_BIOM_SEBS_IS",
                                          crab=="StMatts"~"SPR_CHLORO_BIOM_SMBKC")) %>% 
          dplyr::select(-crab) %>% 
+         dplyr::select(YEAR,INDICATOR_NAME,DATA_VALUE) %>% 
          write.csv(paste0("Data/Kalei/Spring_Chlorophylla_Biomass_",x,"_Satellite.csv"),row.names = F))
 
 
