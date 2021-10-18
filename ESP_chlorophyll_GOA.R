@@ -55,7 +55,7 @@ data2 <- lapply(2003:2020,function(x) readRDS(paste0("Data/chlorophyll/modis_8da
                   filter((nmfsarea %in% c(610,620,630,640,650) & month%in%c(5) & depth<(-10) & depth>(-200))) %>% 
                   mutate(region=ifelse(nmfsarea%in%c(610,620,630),"WCGOA","EGOA")) %>% 
                   group_by(region,YEAR) %>% 
-                  summarise(DATA_VALUE=mean(chlorophyll,na.rm=TRUE))) %>% 
+                  summarise(DATA_VALUE=round(mean(chlorophyll,na.rm=TRUE),2))) %>% 
   bind_rows() %>% 
   ungroup %>% 
   bind_rows(readRDS("Data/chlorophyll/modis_8day/merged/chl_8day_merged_2021_through_07162021.RDS") %>% 
@@ -65,13 +65,14 @@ data2 <- lapply(2003:2020,function(x) readRDS(paste0("Data/chlorophyll/modis_8da
               filter((nmfsarea %in% c(610,620,630,640,650) & month%in%c(5) & depth<(-10) & depth>(-200))) %>% 
               mutate(region=ifelse(nmfsarea%in%c(610,620,630),"WCGOA","EGOA")) %>% 
               group_by(region,YEAR) %>% 
-              summarise(DATA_VALUE=mean(chlorophyll,na.rm=TRUE))) %>% 
+              summarise(DATA_VALUE=round(mean(chlorophyll,na.rm=TRUE),2))) %>% 
   ungroup %>% 
-  mutate(INDICATOR_NAME=paste0("SPR_CHLORO_BIOM_",region))
+  mutate(INDICATOR_NAME=paste0("Spring_Chlorophylla_Biomass_",region,"_Satellite"))
 
-lapply(unique(data2$region),function(x) data2 %>% 
-  filter(region=="WCGOA") %>% 
-  dplyr::select(-region) %>% 
+
+lapply(unique(data2$region),function(x) data2 %>%
+    filter(region==x) %>% 
+    dplyr::select(YEAR,INDICATOR_NAME,DATA_VALUE) %>% 
   write.csv(paste0("Data/Kalei/Spring_Chlorophylla_Biomass_",x,"_Satellite.csv"),row.names = F))
 
 # p1 <- data2 %>% 
